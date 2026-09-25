@@ -16,6 +16,8 @@ spec:
         - name: employee-platform
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            {{- toYaml .Values.envFrom | nindent 12 }}
           command:
             - php
             - artisan
