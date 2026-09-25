@@ -1,0 +1,26 @@
+---
+- name: Install K3s
+  hosts: k3s_server
+  become: true
+
+  tasks:
+    - name: Install K3s server
+      ansible.builtin.shell:
+        cmd: curl -sfL https://get.k3s.io | sh -
+        creates: /usr/local/bin/k3s
+
+    - name: Enable and start K3s
+      ansible.builtin.systemd:
+        name: k3s
+        enabled: true
+        state: started
+
+    - name: Verify K3s
+      ansible.builtin.command:
+        cmd: k3s kubectl get nodes
+      register: k3s_nodes
+      changed_when: false
+
+    - name: Display K3s nodes
+      ansible.builtin.debug:
+        var: k3s_nodes.stdout
